@@ -21,6 +21,8 @@
 
 @media(min-width:901px){.onboarding-layout{min-height:calc(100dvh - 112px);padding-top:0;padding-bottom:24px;align-items:center}.onboarding-pane{min-height:0}.onboarding-content{padding-top:20px;padding-bottom:12px}.welcome-emblem{height:95px;margin:0 0 20px}.welcome-emblem .brand-mark{width:70px;height:70px;border-radius:16px}.welcome-list{gap:15px}.onboarding-nav{margin-bottom:20px}.onboarding-bottom{padding-top:12px}.onboarding-top{padding-top:24px;padding-bottom:24px}}
 /* Appearance controls share one preference across onboarding and the app. */
+#onboardingTitle:focus{outline:none}
+@media(max-width:700px){.app-footer{display:none}}
 .theme-toggle{color:var(--ink);background:var(--surface);border:1px solid var(--line);width:36px;height:36px;border-radius:9px}
 .theme-toggle svg{width:17px;height:17px}
 .onboarding-actions{display:flex;align-items:center;gap:16px}

@@ -2,6 +2,12 @@
 
 Local-first athlete app with onboarding, training plans and logs, weekly/monthly calendars, food logging and CSV import, recovery check-ins, exercise progress, and a demo AI chat.
 
+## Telefonsimulator
+
+På en computer åbner HARPEX i en interaktiv telefonramme med mobil-layout, statuslinje, bundnavigation og separat scrolling inde i telefonen. Rammen tilpasses automatisk vinduets størrelse. Brug simulatorens knapper til at skifte tema, vise onboarding eller gå til overblikket via hjemindikatoren. Onboarding-knappen sletter ikke dine gemte data.
+
+På en mobil fylder appen skærmen uden en ekstra telefonramme. Det er en browserbaseret app-simulator, ikke en iOS-/Android-emulator eller en native app.
+
 ## GitHub og Vercel
 
 1. Pak ZIP-filen ud, og upload de udpakkede filer til dit GitHub-repository. Upload ikke selve ZIP-filen som appen.
@@ -35,6 +41,8 @@ Open http://127.0.0.1:4173/. The app is static and requires no build or package 
 
 ## Source
 
+- `index.html`, `simulator.css`, `simulator.js`: telefonrammen og simulatorens kontroller.
+- `app.html`: den interaktive mobilapp, indlæst i simulatorens egen viewport.
 - `app.js`: existing athlete features and local data handling, integrated from the newer supplied release.
 - `experience.js`: onboarding, dashboard, theme preference, and demo chat.
 - `theme.css`: neutral light/dark design and responsive layouts.

@@ -1,6 +1,6 @@
-const CACHE='puls-shell-harpex-v2';
+const CACHE='puls-shell-harpex-simulator-v4';
 const BASE=self.registration.scope;
-const ASSETS=['','app.js','experience.js','theme.css','manifest.webmanifest','harpex-icon.svg','harpex-icon-192.png','harpex-icon-512.png','foedevarer-skabelon.csv'].map(path=>BASE+path);
+const ASSETS=['','app.html','app.html?v=simulator-3','simulator.js?v=3','simulator.css?v=3','app.js','experience.js?v=simulator-3','theme.css?v=simulator-3','manifest.webmanifest','harpex-icon.svg','harpex-icon-192.png','harpex-icon-512.png','foedevarer-skabelon.csv'].map(path=>BASE+path);
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('puls-shell-')&&key!==CACHE).map(key=>caches.delete(key)))));self.clients.claim()});
 self.addEventListener('fetch',e=>{

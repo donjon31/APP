@@ -4,6 +4,7 @@ const uiIcon = name => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColo
 
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light';
+  if (window.parent !== window) window.parent.postMessage({type:'harpex-theme',theme:document.documentElement.dataset.theme,view:document.getElementById('onboarding').hidden?'app':'onboarding'},location.origin);
   const dark = document.documentElement.dataset.theme === 'dark';
   document.querySelector('meta[name="theme-color"]').content=dark?'#111111':'#ffffff';
   document.querySelectorAll('[data-ui="theme"]').forEach(button=>{
@@ -27,6 +28,20 @@ document.addEventListener('click',event=>{
 });
 
 const uiNumber = value => new Intl.NumberFormat('da-DK', {maximumFractionDigits:1}).format(value);
+// Only the same-origin simulator can control the embedded app.
+window.addEventListener('message', event => {
+  if (event.source !== window.parent || event.origin !== location.origin || event.data?.type !== 'harpex-simulator') return;
+  if (event.data.action === 'theme') applyTheme(event.data.theme);
+  if (event.data.action === 'onboarding') {
+    startOnboarding();
+    document.getElementById('onboarding').scrollTop = 0;
+  }
+  if (event.data.action === 'home') {
+    if (!document.getElementById('onboarding').hidden) closeOnboarding(true);
+    else showTab('home');
+    window.scrollTo({top:0,behavior:'instant'});
+  }
+});
 const pageCopy = {
   home: ['I dag', 'Træning, mad og restitution.', 'Overblik'],
   plan: ['Kalender', 'Dine træningspas og kampe.', 'Kalender'],
@@ -150,6 +165,7 @@ function closeOnboarding(preview=false) {
   document.body.style.overflow='';
   if(preview)sessionStorage.setItem('puls-onboarding-preview','true');
   showTab('home');
+  applyTheme(document.documentElement.dataset.theme);
   if(previousFocus?.isConnected)previousFocus.focus({preventScroll:true});
 }
 const onboardingSteps=[

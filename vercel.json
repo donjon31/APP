@@ -4,3 +4,8 @@
   "buildCommand": "",
   "outputDirectory": "."
 }
+{
+  "deploymentProtection": {
+    "status": "disabled"
+  }
+}

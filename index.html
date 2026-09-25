@@ -11,8 +11,8 @@
   <link rel="icon" type="image/svg+xml" href="./harpex-icon.svg">
   <link rel="apple-touch-icon" href="./harpex-icon-192.png">
   <link rel="stylesheet" href="./simulator.css?v=3">
-  <script>try{document.documentElement.dataset.theme=localStorage.getItem('harpex-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch{document.documentElement.dataset.theme='light'}</script>
-  <script src="./simulator.js?v=3" defer></script>
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('harpex-theme')||'dark'}catch{document.documentElement.dataset.theme='dark'}</script>
+  <script src="./simulator.js?v=4" defer></script>
   <title>HARPEX · Telefonsimulator</title>
 </head>
 <body>
@@ -43,7 +43,7 @@
               <svg class="battery" viewBox="0 0 28 15" fill="currentColor"><rect x="1" y="2" width="23" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="3" y="4" width="19" height="7" rx="1.5"/><path d="M26 5v5c2-1 2-4 0-5Z"/></svg>
             </span>
           </div>
-          <iframe id="appFrame" src="./app.html?v=simulator-3" title="HARPEX mobilapp"></iframe>
+          <iframe id="appFrame" src="./app.html?v=rhythm-2" title="HARPEX mobilapp"></iframe>
           <button class="home-indicator" type="button" id="phoneHome" aria-label="Gå til appens overblik"><span></span></button>
         </div>
       </div>

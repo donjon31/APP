@@ -47,6 +47,7 @@
     if (event.origin !== location.origin || event.source !== frame.contentWindow) return;
     if (event.data?.type === 'harpex-theme') {
       setTheme(event.data.theme);
+      if (/^#[0-9a-f]{6}$/i.test(event.data.background || '')) document.querySelector('.phone-screen').style.setProperty('--screen',event.data.background);
       document.querySelector('.phone-screen').dataset.view = event.data.view === 'onboarding' ? 'onboarding' : 'app';
     }
   });

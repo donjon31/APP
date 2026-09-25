@@ -34,13 +34,14 @@ Open http://127.0.0.1:4173/. The app is static and requires no build or package 
 
 - Profile and logs are saved in browser local storage. Existing PULS data uses the same storage key for compatibility.
 - Existing PULS and new HARPEX exports can both be imported through Profile.
-- The theme button and Profile appearance controls switch light/dark themes. The choice persists locally; the initial choice follows the device theme.
+- The theme button and Profile appearance controls switch light/dark themes. The choice persists locally; new installations start in the reference-inspired dark theme.
 - Onboarding can be reopened from Profile. Answers are applied when the final step is saved.
 - AI chat uses explicitly labeled, deterministic demo replies. There is no model, API key, API connection, or network request in the chat.
 - The original food-product search contacts Open Food Facts only when submitted.
 
 ## Source
 
+- `identity.js`, `identity.css`: original SVG card illustrations, three-screen introduction, muted green/coral/ochre design system, compact choices and reduced-motion-aware transitions. No generated photographs are included.
 - `index.html`, `simulator.css`, `simulator.js`: telefonrammen og simulatorens kontroller.
 - `app.html`: den interaktive mobilapp, indlæst i simulatorens egen viewport.
 - `app.js`: existing athlete features and local data handling, integrated from the newer supplied release.

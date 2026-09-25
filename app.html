@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
-<script>try{const t=localStorage.getItem("harpex-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch{document.documentElement.dataset.theme="light"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("harpex-theme")||"dark"}catch{document.documentElement.dataset.theme="dark"}</script>
 <meta name="description" content="Din træning, mad og restitution. Samlet i HARPEX.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -13,9 +13,11 @@
 <link rel="apple-touch-icon" href="./harpex-icon-192.png">
 <link rel="icon" type="image/svg+xml" href="./harpex-icon.svg">
 <link rel="stylesheet" href="./theme.css?v=simulator-3">
+<link rel="stylesheet" href="./identity.css?v=2">
 <title>HARPEX · App</title>
 <script src="./app.js" defer></script>
-<script src="./experience.js?v=simulator-3" defer></script>
+<script src="./identity.js?v=1" defer></script>
+<script src="./experience.js?v=rhythm-2" defer></script>
 </head>
 <body>
 <div class="app-shell" id="appShell">
@@ -41,6 +43,9 @@
 <div class="heading"><div><div class="eyebrow" id="date"></div><h1 id="pageTitle">Din dag, dit tempo.</h1><p id="pageSubtitle" class="muted">Små skridt. Stærkere hver dag.</p></div><button class="button heading-action" data-action="tab" data-value="train"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Log træning</button></div>
 <section class="panel active" id="home" aria-label="Dit overblik">
 <div class="daily-strip"><div><span class="eyebrow">DENNE UGE</span><strong id="weekSummary">Din uge i overblik</strong></div><div id="dashboardWeek" class="dashboard-week"></div><button class="icon-button week-link" aria-label="Åbn kalender" data-action="tab" data-value="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></div>
+<div class="section-heading">Dine spor <small>Et lille skridt i dag</small></div>
+<div class="quick-tracks"><button class="quick-track" data-action="tab" data-value="train"><span class="track-emoji" aria-hidden="true">🏋️</span><span class="track-arrow" aria-hidden="true">↗</span><strong>Træning</strong><small>Find dit pas</small></button><button class="quick-track" data-action="tab" data-value="fuel"><span class="track-emoji" aria-hidden="true">🥑</span><span class="track-arrow" aria-hidden="true">↗</span><strong>Energi</strong><small>Log et måltid</small></button><button class="quick-track" data-action="tab" data-value="recovery"><span class="track-emoji" aria-hidden="true">🌙</span><span class="track-arrow" aria-hidden="true">↗</span><strong>Restitution</strong><small>Dit check-in</small></button></div>
+<div class="section-heading">Dit daglige overblik <small>Byg din rytme</small></div>
 <div class="dashboard-stats" id="dashboardStats"></div>
 <div class="dashboard-grid">
 <div class="dashboard-main">

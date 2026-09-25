@@ -4,7 +4,7 @@ const uiIcon = name => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColo
 
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light';
-  if (window.parent !== window) window.parent.postMessage({type:'harpex-theme',theme:document.documentElement.dataset.theme,view:document.getElementById('onboarding').hidden?'app':'onboarding'},location.origin);
+  if (window.parent !== window) window.parent.postMessage({type:'harpex-theme',theme:document.documentElement.dataset.theme,background:getComputedStyle(document.documentElement).getPropertyValue('--canvas').trim(),view:document.getElementById('onboarding').hidden?'app':'onboarding'},location.origin);
   const dark = document.documentElement.dataset.theme === 'dark';
   document.querySelector('meta[name="theme-color"]').content=dark?'#111111':'#ffffff';
   document.querySelectorAll('[data-ui="theme"]').forEach(button=>{
@@ -133,6 +133,7 @@ document.addEventListener('click',e=>{
 // Onboarding is deliberately separate from the saved profile until Finish.
 const ONBOARDING_DRAFT_KEY='puls-onboarding-draft-v1';
 let onboardingStep=0;
+let introSlide=0;
 let onboardingDraft;
 let previousFocus;
 function draftFromProfile() {
@@ -150,6 +151,7 @@ function readDraft() {
 }
 function persistDraft(){try{localStorage.setItem(ONBOARDING_DRAFT_KEY,JSON.stringify(onboardingDraft))}catch{}}
 function startOnboarding(restart=false) {
+  introSlide=0;
   previousFocus=document.activeElement;
   onboardingDraft=restart?draftFromProfile():readDraft();
   if(restart)persistDraft();
@@ -182,7 +184,8 @@ const onboardingSteps=[
 function option(value,label,detail='',icon='') {
   const key={1:'sport',2:'sex',5:'dayType',6:'energyGoal'}[onboardingStep];
   const selected=onboardingDraft[key]===value;
-  return '<button type="button" class="onboarding-option '+(selected?'selected':'')+'" role="radio" aria-checked="'+selected+'" data-choice="'+esc(value)+'">'+(icon?uiIcon(icon):'')+'<span>'+label+(detail?'<small>'+detail+'</small>':'')+'</span><span class="option-check">'+uiIcon('check')+'</span></button>';
+  const emoji = {'Håndbold':'🤾','Fodbold':'⚽','Basketball':'🏀','Anden sport':'🏃'}[value];
+  return '<button type="button" class="onboarding-option '+(selected?'selected':'')+'" role="radio" aria-checked="'+selected+'" data-choice="'+esc(value)+'">'+(emoji?'<span class="choice-emoji" aria-hidden="true">'+emoji+'</span>':icon?uiIcon(icon):'')+'<span>'+label+(detail?'<small>'+detail+'</small>':'')+'</span><span class="option-check">'+uiIcon('check')+'</span></button>';
 }
 function onboardingBody() {
   if(onboardingStep===0)return '<div class="welcome-emblem"><span class="brand-mark">'+uiIcon('pulse')+'</span></div><div class="welcome-list">'+[
@@ -222,6 +225,13 @@ function estimateDraft() {
 function renderOnboarding(focusHeading=true) {
   const [title,description]=onboardingSteps[onboardingStep];
   const root=document.getElementById('onboarding');
+  root.dataset.step=String(onboardingStep);
+  if(onboardingStep===0){
+    root.innerHTML=harpexIntro(introSlide);
+    applyTheme(document.documentElement.dataset.theme);
+    if(focusHeading)document.getElementById('onboardingTitle').focus({preventScroll:true});
+    return;
+  }
   root.innerHTML='<div class="onboarding-top"><span class="brand"><span class="brand-mark">'+uiIcon('pulse')+'</span>HARPEX</span><div class="onboarding-actions"><button type="button" class="theme-toggle icon-button" data-ui="theme" aria-label="Skift til mørkt tema" title="Skift tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button><button type="button" class="text-button" data-onboard="preview">Se appen først '+uiIcon('arrow')+'</button></div></div>'+
     '<div class="onboarding-layout"><aside class="onboarding-context"><div class="context-label"><span></span>BYGGET OMKRING DIG</div><h2>En plan, der<br>følger dig.</h2><p>Fra den første træning til det sidste måltid. Find din rytme med HARPEX.</p><div class="feature-chips"><span>Træning</span><span>Mad</span><span>Restitution</span></div></aside>'+
     '<form id="onboardingForm" class="onboarding-pane"><div class="onboarding-nav"><button type="button" class="onboarding-back" data-onboard="back" aria-label="Forrige trin" '+(!onboardingStep?'style="visibility:hidden"':'')+'>'+uiIcon('arrow')+'</button><div class="onboarding-progress" role="progressbar" aria-label="Opsætning" aria-valuemin="0" aria-valuemax="8" aria-valuenow="'+onboardingStep+'"><i style="width:'+Math.max(4,onboardingStep/8*100)+'%"></i></div><span class="step-count">'+(onboardingStep===0?'START':String(onboardingStep).padStart(2,'0')+' / 08')+'</span></div>'+
@@ -236,6 +246,7 @@ document.getElementById('onboarding').addEventListener('input',e=>{
 document.getElementById('onboarding').addEventListener('click',e=>{
   const button=e.target.closest('button');
   if(!button)return;
+  if(button.hasAttribute('data-intro-back')){introSlide=Math.max(0,introSlide-1);renderOnboarding();return}
   if(button.dataset.onboard==='preview'){closeOnboarding(true);return}
   if(button.dataset.onboard==='back'){onboardingStep=Math.max(0,onboardingStep-1);renderOnboarding();return}
   if(button.dataset.choice) {
@@ -257,6 +268,7 @@ document.getElementById('onboarding').addEventListener('click',e=>{
 });
 document.getElementById('onboarding').addEventListener('submit',e=>{
   e.preventDefault();
+  if(onboardingStep===0&&introSlide<2){introSlide++;renderOnboarding();document.getElementById('onboarding').scrollTop=0;return}
   const requiredKey={1:'sport',2:'sex',5:'dayType',6:'energyGoal'}[onboardingStep];
   if(requiredKey&&!onboardingDraft[requiredKey]) {
     document.getElementById('onboardingError').textContent='Vælg en mulighed for at fortsætte.';

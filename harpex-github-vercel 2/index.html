@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eeeeec">
+  <meta name="description" content="Prøv HARPEX i en interaktiv telefonsimulator. Træning, mad og restitution samlet i din app.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="HARPEX">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./harpex-icon.svg">
+  <link rel="apple-touch-icon" href="./harpex-icon-192.png">
+  <link rel="stylesheet" href="./simulator.css?v=3">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('harpex-theme')||'dark'}catch{document.documentElement.dataset.theme='dark'}</script>
+  <script src="./simulator.js?v=4" defer></script>
+  <title>HARPEX · Telefonsimulator</title>
+</head>
+<body>
+  <header class="simulator-toolbar">
+    <div class="simulator-brand"><img src="./harpex-icon.svg" width="28" height="28" alt=""><span>HARPEX</span><span class="toolbar-divider"></span><span class="simulator-label">App-simulator</span></div>
+    <div class="simulator-controls">
+      <div class="theme-control" role="group" aria-label="Appens tema">
+        <button type="button" data-theme="light" aria-pressed="true">Lyst</button>
+        <button type="button" data-theme="dark" aria-pressed="false">Mørkt</button>
+      </div>
+      <button class="onboarding-control" id="openOnboarding" type="button" title="Vis onboarding uden at slette dine data">Vis onboarding <span aria-hidden="true">↗</span></button>
+    </div>
+  </header>
+  <main class="simulator-stage" aria-label="HARPEX telefonsimulator">
+    <div class="phone-size" id="phoneSize">
+      <div class="phone" id="phone">
+        <span class="hardware-button mute" aria-hidden="true"></span>
+        <span class="hardware-button volume-up" aria-hidden="true"></span>
+        <span class="hardware-button volume-down" aria-hidden="true"></span>
+        <span class="hardware-button power" aria-hidden="true"></span>
+        <div class="phone-screen">
+          <div class="phone-statusbar" aria-hidden="true">
+            <span id="phoneTime">9:41</span>
+            <span class="camera-island"><i></i></span>
+            <span class="status-icons">
+              <svg viewBox="0 0 18 14"><path d="M1 10h2v3H1zM5 7h2v6H5zM9 4h2v9H9zM13 1h2v12h-2z" fill="currentColor"/></svg>
+              <svg viewBox="0 0 20 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 5c4.5-4 11.5-4 16 0M5 8c3-2.5 7-2.5 10 0M8 11c1.2-1 2.8-1 4 0"/><circle cx="10" cy="14" r=".8" fill="currentColor" stroke="none"/></svg>
+              <svg class="battery" viewBox="0 0 28 15" fill="currentColor"><rect x="1" y="2" width="23" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="3" y="4" width="19" height="7" rx="1.5"/><path d="M26 5v5c2-1 2-4 0-5Z"/></svg>
+            </span>
+          </div>
+          <iframe id="appFrame" src="./app.html?v=organization-2" title="HARPEX mobilapp"></iframe>
+          <button class="home-indicator" type="button" id="phoneHome" aria-label="Gå til appens overblik"><span></span></button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="simulator-footer"><span>390 × 844</span><span class="footer-dot" aria-hidden="true"></span><span>Interaktiv preview</span><span class="footer-dot" aria-hidden="true"></span><span>Data gemmes på din enhed</span></footer>
+  <noscript>Telefonsimulatoren kræver JavaScript. <a href="./app.html">Åbn appen direkte</a>.</noscript>
+</body>
+</html>

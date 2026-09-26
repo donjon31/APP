@@ -1,0 +1,77 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  color: #252525;
+  background: #eeeeec;
+  --stage: #eeeeec;
+  --line: #d7d7d4;
+  --muted: #747471;
+  --control: #f8f8f6;
+  --screen: #fafafa;
+  --screen-ink: #191919;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color: #e9e9e7;
+  background: #1c1c1c;
+  --stage: #1c1c1c;
+  --line: #383838;
+  --muted: #959592;
+  --control: #262626;
+  --screen: #111111;
+  --screen-ink: #f1f1f1;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; height: 100dvh; min-height: 320px; display: grid; grid-template-rows: 68px minmax(0, 1fr) 38px; overflow: hidden; }
+button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+button:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.simulator-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 0 32px; gap: 20px; }
+.simulator-brand { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; letter-spacing: .04em; }
+.simulator-brand img { border-radius: 7px; }
+.toolbar-divider { height: 18px; width: 1px; background: var(--line); margin: 0 6px; }
+.simulator-label { color: var(--muted); font-size: 12px; font-weight: 400; letter-spacing: 0; }
+.simulator-controls { display: flex; align-items: center; gap: 12px; }
+.theme-control { display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 8px; gap: 2px; }
+.theme-control button { border: 0; background: transparent; border-radius: 5px; padding: 7px 12px; font-size: 12px; color: var(--muted); }
+.theme-control button[aria-pressed="true"] { background: var(--control); color: inherit; box-shadow: 0 1px 3px #0000000d; }
+.onboarding-control { border: 1px solid var(--line); border-radius: 8px; background: transparent; font-size: 12px; padding: 10px 12px; }
+.onboarding-control span { margin-left: 10px; }
+.simulator-stage { display: grid; place-items: center; min-height: 0; overflow: hidden; padding: 8px 20px 16px; }
+.phone-size { width: 410px; height: 864px; position: relative; }
+.phone { width: 410px; height: 864px; padding: 9px; border-radius: 56px; background: #151515; border: 1px solid #555; position: relative; transform-origin: top left; box-shadow: inset 0 0 0 2px #303030, inset 0 0 0 4px #0b0b0b, 0 24px 48px -20px #0005, 0 3px 6px #0003; }
+.phone-screen[data-view="onboarding"] { --screen: #ffffff; }
+[data-theme="dark"] .phone-screen[data-view="onboarding"] { --screen: #191919; }
+.phone-screen { height: 100%; width: 100%; border-radius: 45px; overflow: hidden; background: var(--screen); color: var(--screen-ink); display: flex; flex-direction: column; isolation: isolate; }
+.phone-statusbar { position: relative; flex: 0 0 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 27px; font-size: 14px; font-weight: 600; letter-spacing: -.2px; }
+.camera-island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 116px; height: 30px; border-radius: 20px; background: #080808; }
+.camera-island i { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: #11141b; border: 2px solid #181a20; right: 11px; top: 10px; }
+.status-icons { display: flex; align-items: center; gap: 5px; }
+.status-icons svg { width: 17px; height: 14px; }
+.status-icons .battery { width: 25px; }
+iframe { display: block; width: 100%; flex: 1; min-height: 0; border: 0; background: var(--screen); }
+.home-indicator { flex: 0 0 24px; border: 0; padding: 0; width: 100%; display: grid; place-items: center; color: var(--screen-ink); background: var(--screen); }
+.home-indicator span { display: block; width: 128px; height: 5px; border-radius: 3px; background: currentColor; }
+.home-indicator:focus-visible { outline-offset: -5px; }
+.hardware-button { position: absolute; width: 3px; background: #404040; border-radius: 2px; left: -4px; }
+.mute { top: 108px; height: 25px; }
+.volume-up { top: 156px; height: 49px; }
+.volume-down { top: 217px; height: 49px; }
+.power { top: 179px; height: 74px; left: auto; right: -4px; }
+.simulator-footer { display: flex; justify-content: center; align-items: center; gap: 10px; color: var(--muted); font-size: 10px; padding-bottom: 8px; letter-spacing: .015em; }
+.footer-dot { width: 2px; height: 2px; border-radius: 50%; background: currentColor; }
+@media (max-width: 700px) and (min-width: 601px) {
+  .simulator-toolbar { padding: 0 20px; }
+  .simulator-label, .toolbar-divider { display: none; }
+}
+/* On a real phone the device itself provides the frame and system status bar. */
+@media (max-width: 600px) {
+  body { display: block; min-height: 0; background: var(--screen); }
+  .simulator-toolbar, .simulator-footer, .phone-statusbar, .home-indicator, .hardware-button { display: none; }
+  .simulator-stage { display: block; height: 100dvh; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+  .phone-size, .phone { width: 100% !important; height: 100% !important; transform: none !important; }
+  .phone { padding: 0; border: 0; border-radius: 0; box-shadow: none; background: var(--screen); }
+  .phone-screen { border-radius: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  body, .theme-control button { transition: background-color .2s, color .2s; }
+}

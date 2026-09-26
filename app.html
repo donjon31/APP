@@ -14,10 +14,12 @@
 <link rel="icon" type="image/svg+xml" href="./harpex-icon.svg">
 <link rel="stylesheet" href="./theme.css?v=simulator-3">
 <link rel="stylesheet" href="./identity.css?v=2">
+<link rel="stylesheet" href="./organization.css?v=2">
 <title>HARPEX · App</title>
-<script src="./app.js" defer></script>
+<script src="./organization.js?v=2" defer></script>
+<script src="./app.js?v=organization-1" defer></script>
 <script src="./identity.js?v=1" defer></script>
-<script src="./experience.js?v=rhythm-2" defer></script>
+<script src="./experience.js?v=organization-1" defer></script>
 </head>
 <body>
 <div class="app-shell" id="appShell">
@@ -110,8 +112,13 @@
 </label>
 <label class="field">Dato<input name="date" type="date" required>
 </label>
-<label class="field">Klokkeslæt<input name="time" type="time" value="18:00" required>
+<input name="editId" type="hidden">
+<label class="field">Starttid<input name="time" type="time" value="18:00" required>
 </label>
+<label class="field">Sluttid<input name="endTime" type="time" value="19:00" required>
+</label>
+<label class="field span"><span><input name="endsNextDay" type="checkbox"> Slutter næste dag</span></label>
+<p class="form-error span" id="eventTimeError" role="alert"></p>
 <label class="field span" id="strengthPicker" hidden>Vælg styrkepas<select id="strengthEventChoice">
 </select>
 </label>
@@ -120,13 +127,14 @@
 <input name="title" placeholder="Fx modstanderen eller træningsstedet">
 </label>
 <button class="button span">Gem aktivitet</button>
+<button class="button secondary span" id="cancelEventEdit" type="button" hidden>Annullér redigering</button>
 </form>
 </div>
 <div class="card">
 <h2>Aktiviteter i viste uge</h2>
 <div id="eventList">
 </div>
-<p class="foot">Flyt en kamp ved at slette den og oprette den på den nye dato. Forslaget opdateres med det samme.</p>
+<p class="foot">Brug “Ret tid” for at ændre dato, starttid eller sluttid uden at slette aktiviteten.</p>
 </div>
 </div>
 </section>
@@ -215,12 +223,14 @@
 <div class="card">
 <h2>Log måltid</h2>
 <form class="form" id="mealForm">
+<input name="presetOnly" type="hidden">
 <label class="field span">Navn<input name="name" placeholder="Fx aftensmad" required>
 </label>
 <label class="field">Kalorier<input name="kcal" type="number" min="0" required>
 </label>
 <label class="field">Protein (g)<input name="protein" type="number" min="0" required>
 </label>
+<label class="field span">Kategori<select name="category" required><option value="Morgenmad">Morgenmad</option><option value="Frokost">Frokost</option><option value="Aftensmad">Aftensmad</option><option value="Før træning">Snacks før træning</option><option value="Efter træning">Snacks efter træning</option><option value="Hygge">Snacks til hygge</option></select></label>
 <label class="field span">
 <span>
 <input type="checkbox" name="savePreset"> Gem som fast måltid</span>
@@ -230,6 +240,10 @@
 </div>
 <div class="card">
 <h2>Faste måltider</h2>
+<p class="foot">Gem dine favoritter, og log dem med ét tryk.</p>
+<button type="button" class="button full" id="newPreset">Nyt fast måltid</button>
+<div id="presetCategories" class="preset-categories" aria-label="Måltidskategorier"></div>
+<div id="presetFeedback" role="status" aria-live="polite"></div>
 <div id="presets">
 </div>
 <h2 style="margin-top:22px">I dag</h2>

@@ -65,7 +65,7 @@ showTab = function (id) {
   document.querySelector('.heading-action').hidden = id !== 'home';
   document.title = 'HARPEX · ' + crumb;
   closeMoreMenu();
-  document.querySelector('[data-ui="more"]').classList.toggle('active',['plan','recovery','progress','profile'].includes(id));
+  document.querySelector('[data-ui="more"]').classList.toggle('active',['chat','recovery','progress','profile'].includes(id));
   if (id === 'chat') renderChat();
 };
 function renderDashboard() {

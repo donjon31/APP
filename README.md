@@ -32,6 +32,9 @@ Open http://127.0.0.1:4173/. The app is static and requires no build or package 
 
 ## Data and themes
 
+- Faste måltider kan oprettes uden at logge mad, kategoriseres som morgenmad, frokost, aftensmad, snacks før/efter træning eller hygge og slettes med mulighed for at fortryde. Ældre favoritter uden kategori bevares under “Uden kategori”. Tidligere måltidslogs berøres ikke af sletning af en favorit.
+- Kalenderaktiviteter har starttid og sluttid samt mulighed for at slutte næste dag. “Ret tid” redigerer eksisterende aktiviteter. Ældre aktiviteter beholder deres starttid; en manglende sluttid vises tydeligt og kan tilføjes.
+- Bundmenuen giver direkte adgang til Overblik, Kalender, Træning, Mad og Mere. Mad er opdelt i Log, Faste, Idéer og Søg; kalenderen har separat måneds- og ugevisning.
 - Profile and logs are saved in browser local storage. Existing PULS data uses the same storage key for compatibility.
 - Existing PULS and new HARPEX exports can both be imported through Profile.
 - The theme button and Profile appearance controls switch light/dark themes. The choice persists locally; new installations start in the reference-inspired dark theme.
@@ -41,6 +44,8 @@ Open http://127.0.0.1:4173/. The app is static and requires no build or package 
 
 ## Source
 
+- `organization.js`, `organization.css`: måltidskategorier, slet/fortryd, tidsvalidering, aktivitetsredigering og opdelt navigation.
+- `tests/organization.test.cjs`: datakompatibilitet og regressionstests. Kør med `node tests/organization.test.cjs`.
 - `identity.js`, `identity.css`: original SVG card illustrations, three-screen introduction, muted green/coral/ochre design system, compact choices and reduced-motion-aware transitions. No generated photographs are included.
 - `index.html`, `simulator.css`, `simulator.js`: telefonrammen og simulatorens kontroller.
 - `app.html`: den interaktive mobilapp, indlæst i simulatorens egen viewport.

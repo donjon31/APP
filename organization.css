@@ -1,0 +1,15 @@
+.food-navigation{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;background:var(--soft);border-radius:11px;margin:0 0 19px}
+.food-navigation button{border:0;background:transparent;color:var(--muted);padding:11px 4px;border-radius:8px;font-size:.8rem;font-weight:600}
+.food-navigation button[aria-pressed="true"]{background:var(--surface);color:var(--ink)}
+.calendar-navigation{grid-template-columns:repeat(2,1fr)}
+.preset-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:18px 0}
+.preset-categories button{display:flex;align-items:center;gap:7px;text-align:left;border:1px solid var(--line);background:transparent;color:var(--ink);padding:11px 9px;border-radius:9px;font-size:.72rem;min-height:44px}
+.preset-categories button[aria-pressed="true"]{background:var(--green-soft);border-color:var(--green)}
+.preset-categories small{margin-left:auto;color:var(--muted)}
+.saved-meal{padding:16px 0;border-top:1px solid var(--line)}.saved-meal-heading{display:flex;gap:10px;align-items:center;justify-content:space-between}.saved-meal-heading>div{min-width:0}.saved-meal h3{font-size:.9rem;overflow-wrap:anywhere}.saved-meal p{color:var(--muted);font-size:.73rem;margin-top:5px}.saved-meal .button{font-size:.75rem;padding:9px 12px;min-height:40px;flex-shrink:0}
+.meal-options{margin-top:12px}.meal-options summary{font-size:.7rem;color:var(--muted);cursor:pointer;padding:5px 0}.meal-options .field{margin-top:12px}.delete-preset{border:1px solid var(--line);background:transparent;color:var(--error);border-radius:8px;padding:10px 12px;margin-top:12px;font-size:.75rem}
+.preset-empty{padding:24px 3px;text-align:center}.preset-empty strong{font-size:.9rem}.preset-empty p{color:var(--muted);font-size:.78rem;margin-top:8px}
+#newPreset{margin-top:15px}#presetFeedback:not(:empty){border:1px solid var(--green);background:var(--green-soft);padding:12px;border-radius:9px;font-size:.75rem;margin-bottom:12px}#presetFeedback button{display:block;background:transparent;border:0;text-decoration:underline;padding:8px 0 0;font-weight:600}
+.form-error{font-size:.78rem;color:var(--error);margin:0}.form-error:empty{display:none}.event-actions{display:flex;gap:7px;flex-wrap:wrap}.event-actions .button{padding:9px 12px;font-size:.73rem}
+.menu-group-label{font-size:.6rem;letter-spacing:.12em;color:var(--muted);margin:14px 0 4px}.more-menu>button{padding:13px 7px;font-size:.88rem}.more-menu .card-top{margin-bottom:5px}.compact-tools>summary{cursor:pointer;font-size:.9rem;font-weight:600;padding:2px 0}.compact-tools-body{padding-top:20px}.compact-tools-body>h2:first-child{display:none}
+@media(max-width:370px){.preset-categories button{font-size:.66rem;padding:10px 7px;gap:5px}.saved-meal-heading{align-items:flex-start}}

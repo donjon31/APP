@@ -2,7 +2,7 @@ const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
 const source=fs.readFileSync(__dirname+'/../history.js','utf8');
 const localDate=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
 const shiftDate=(date,n)=>{const d=new Date(date+'T12:00:00');d.setDate(d.getDate()+n);return localDate(d)};
-const ctx={localDate,shiftDate,today:()=> '2026-09-26'};vm.createContext(ctx);
+const ctx={localDate,shiftDate,today:()=> '2026-09-26',appLocale:()=> 'da-DK'};vm.createContext(ctx);
 vm.runInContext(source.split('let overviewDate=')[0],ctx);
 assert.equal(ctx.historyLabel('2026-09-26'),'I dag');assert.equal(ctx.historyLabel('2026-09-25'),'I går');assert.match(ctx.historyLabel('2026-09-24'),/24/);
 assert.equal(ctx.historyDateValid('2026-02-30'),false);assert.equal(ctx.historyDateValid('2024-02-29'),true);

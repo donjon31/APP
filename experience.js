@@ -27,7 +27,7 @@ document.addEventListener('click',event=>{
   try{localStorage.setItem('harpex-theme',theme)}catch{}
 });
 
-const uiNumber = value => new Intl.NumberFormat('da-DK', {maximumFractionDigits:1}).format(value);
+const uiNumber = value => new Intl.NumberFormat(appLocale(), {maximumFractionDigits:1}).format(value);
 // Only the same-origin simulator can control the embedded app.
 window.addEventListener('message', event => {
   if (event.source !== window.parent || event.origin !== location.origin || event.data?.type !== 'harpex-simulator') return;
@@ -78,7 +78,7 @@ function renderDashboard() {
   const score = readiness();
   const kcalPercent = kcalGoal ? Math.min(100,kcal / kcalGoal * 100) : 0;
   const proteinPercent = proteinGoal ? Math.min(100,protein / proteinGoal * 100) : 0;
-  document.getElementById('topDate').textContent = new Date().toLocaleDateString('da-DK',{day:'numeric',month:'long'});
+  document.getElementById('topDate').textContent = new Date().toLocaleDateString(appLocale(),{day:'numeric',month:'long'});
   const start = weekStart(today());
   const lifts = data.lifts.filter(l => l.date >= start && l.date <= shiftDate(start,6));
   const trainingDays = new Set(lifts.map(l => l.date)).size;
@@ -309,7 +309,7 @@ function renderChat() {
   el.scrollTop=el.scrollHeight;
 }
 function demoReply(message) {
-  const text=message.toLocaleLowerCase('da-DK');
+  const text=message.toLocaleLowerCase(appLocale());
   let detail='Du kan allerede logge træning, måltider og restitution i HARPEX.';
   if(/uge|plan|træning/.test(text)) {
     const start=weekStart(today()),events=data.events.filter(e=>e.date>=start&&e.date<=shiftDate(start,6));

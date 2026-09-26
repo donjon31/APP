@@ -2,7 +2,7 @@ const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 (async()=>{
  const browser=await chromium.launch({headless:true,channel:'chrome'});
- const page=await browser.newPage({viewport:{width:390,height:844}}),errors=[];
+ const page=await browser.newPage({viewport:{width:390,height:844},locale:'da-DK'}),errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:4173/app.html');
  await page.evaluate(()=>{

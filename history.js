@@ -5,7 +5,7 @@ function historyDateValid(value) {
 function historyLabel(date, now=today()) {
   if (date===now) return 'I dag';
   if (date===shiftDate(now,-1)) return 'I går';
-  return new Date(date+'T12:00:00').toLocaleDateString('da-DK',{day:'numeric',month:'short',year:'numeric'});
+  return new Date(date+'T12:00:00').toLocaleDateString(appLocale(),{day:'numeric',month:'short',year:'numeric'});
 }
 function historyMonthBack(end, months) {
   const d=new Date(end+'T12:00:00'),day=d.getDate();
@@ -64,7 +64,7 @@ renderDashboard=function() {
   if(document.getElementById('home').classList.contains('active')) {
     document.getElementById('pageTitle').textContent=label;
     document.getElementById('pageSubtitle').textContent=historical?'Din mad, træning og restitution denne dag.':'Træning, mad og restitution.';
-    document.getElementById('date').textContent=new Date(date+'T12:00:00').toLocaleDateString('da-DK',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    document.getElementById('date').textContent=new Date(date+'T12:00:00').toLocaleDateString(appLocale(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   }
   renderHistory();
 };

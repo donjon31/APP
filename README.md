@@ -32,6 +32,10 @@ Open http://127.0.0.1:4173/. The app is static and requires no build or package 
 
 ## Data and themes
 
+- Øvelsesbibliotek: fælles standardøvelser fra kildekoden plus egne øvelser mærket med den lokale profils `userId`. Standardpas kan redigeres med sæt/reps, tilføjelse og fjernelse; egne pas kan oprettes. Tilpasninger gemmes separat fra standarddefinitionerne og ændrer ikke gamle træningslogs. Øvelseskladder følger stabile øvelses-ID'er, også når en anden øvelse fjernes fra passet.
+- Dette er stadig en lokal app uden login, serverdatabase eller synkronisering. `userId` organiserer data, men er ikke serverbaseret adgangskontrol. Rigtige brugerkonti kræver backend, autentificering og ejerkontrol på serveren. Eksport/import inkluderer egne biblioteker og tilpassede pas.
+- Egne basisvarer oprettes under Mad → Søg → Opret basisvare med kcal/protein pr. 100 g eller ml. Oprettelse logger ikke mad. Varen søges og logges med en valgt mængde, herunder liter/kg. CSV-import bevarer manuelt oprettede basisvarer. Sletning fra biblioteket påvirker ikke gamle måltidslogs.
+- Sprog: dansk ved dansk enhedssprog, ellers engelsk som fallback. Profil → Sprog kan tilsidesætte valget eller følge enheden igen. UI-tekster og datoformat skifter; dataidentifikatorer og egne navne/logs bevares. Det indbyggede danske opskriftsbibliotek og danske varebetegnelser er originalt indhold og oversættes ikke. Der foretages ingen netværkskald til oversættelse.
 - Sæsonmodel i Profil og onboarding: In-season bruger 450 kcal/dag til hallen, 600 kcal pr. kamp fordelt over syv dage samt estimeret styrketræning. Off-season medregner kun styrketræning. Begge lægger 400 kcal/dag til ved gradvis vægtøgning, 0 ved vedligehold. Basis inkluderer hverdagsaktivitet (ikke kun BMR). Det er faste planlægningsantagelser, ikke dokumenteret individuelt forbrug eller en garanti for muskelvækst. Kalenderen lægges ikke oveni sæsonmodellen.
 - Eksisterende profiler bevarer modellen “Efter mine pas”, indtil man vælger en sæsonmodel. Vægtøgningstillægget er nu 400 kcal i alle modeller. Manuelle kaloriemål ændres ikke, før brugeren vælger at bruge beregningen.
 - Faste måltider kan oprettes uden at logge mad, kategoriseres som morgenmad, frokost, aftensmad, snacks før/efter træning eller hygge og slettes med mulighed for at fortryde. Ældre favoritter uden kategori bevares under “Uden kategori”. Tidligere måltidslogs berøres ikke af sletning af en favorit.
@@ -50,6 +54,9 @@ Open http://127.0.0.1:4173/. The app is static and requires no build or package 
 
 ## Source
 
+- `library-core.js`, `library-ui.js`, `library.css`: fælles/private øvelser, egne og redigerbare pas samt basisvarer.
+- `locale.js`: dansk/engelsk grænseflade, automatisk enhedssprog og manuel tilsidesættelse.
+- `tests/library-browser.cjs`: oprettelse, redigering, sletning, ejerfiltrering, persistens, basisvarer og mængder samt sprogvalg.
 - `history.js`, `history.css`: historisk overblik, periodevalg, kalorie-/vægtgrafer og startdato.
 - `workout-drafts.js`: uafhængige indtastninger pr. øvelse.
 - `tests/history.test.cjs`, `tests/history-browser.cjs`: dato-/beregningstests og browserregression. Browsertesten kræver Playwright og Chrome og bruger en isoleret browserprofil.

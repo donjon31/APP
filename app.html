@@ -17,9 +17,13 @@
 <link rel="stylesheet" href="./organization.css?v=2">
 <title>HARPEX · App</title>
 <script src="./organization.js?v=2" defer></script>
-<script src="./app.js?v=organization-1" defer></script>
+<script src="./season.js?v=1" defer></script>
+<script src="./app.js?v=season-1" defer></script>
+<script src="./workout-drafts.js?v=1" defer></script>
 <script src="./identity.js?v=1" defer></script>
-<script src="./experience.js?v=organization-1" defer></script>
+<script src="./experience.js?v=season-1" defer></script>
+<link rel="stylesheet" href="./history.css?v=2">
+<script src="./history.js?v=1" defer></script>
 </head>
 <body>
 <div class="app-shell" id="appShell">
@@ -355,6 +359,12 @@
 <option value="gain">Gradvis vægtøgning</option>
 </select>
 </label>
+<label class="field span">Sæsonmodel<select name="season">
+<option value="sessions">Efter mine pas · eksisterende model</option>
+<option value="in">In-season · +450 kcal til hallen</option>
+<option value="off">Off-season · styrketræning</option>
+</select></label>
+<p class="foot span">In-season erstatter antal sportspas med 450 kcal/dag til hallen. Kampe tælles én gang som 600 kcal pr. kamp, fordelt over ugen. Off-season medregner kun styrkepas. Vælg “Efter mine pas”, hvis du også har sport eller kampe uden for sæsonen. Vægtøgning giver +400 kcal/dag i alle modeller.</p>
 <div class="toolbar span">
 <button type="button" class="button secondary" id="useCalendarCounts">Hent antal pas fra kalenderen</button>
 <button class="button" type="submit">Beregn</button>

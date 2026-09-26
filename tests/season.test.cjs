@@ -1,0 +1,14 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+const context={};vm.createContext(context);vm.runInContext(fs.readFileSync(__dirname+'/../season.js','utf8'),context);
+const cost={Styrke:240,Sportstræning:500,Kamp:480};
+const calculate=(season,gain=true,matches=1,strength=0)=>context.seasonEnergyComponents({season,energyGoal:gain?'gain':'maintain',sportSessions:4,strengthSessions:strength,matchSessions:matches},2200,cost);
+assert.equal(calculate('off').total,2600);assert.equal(calculate('in').total,3136);
+assert.equal(calculate('in').total-calculate('in',false).total,400);
+assert.equal(calculate('off').total-calculate('off',false).total,400);
+assert.equal(calculate('in',true,0).total,3050);
+assert.equal(calculate('in',true,1,7).total,3376);
+assert.equal(calculate('off',true,7,7).total,2840);
+assert.equal(calculate('in').hall,450);assert.equal(calculate('off').matches,0);
+assert.equal(calculate(undefined).season,'sessions');assert.equal(calculate(undefined).hall,2000/7);
+for(const file of ['app.js','season.js','experience.js'])new vm.Script(fs.readFileSync(__dirname+'/../'+file,'utf8'));
+console.log('PASS: season examples, fixed surplus, maintenance, strength, zero matches, legacy model, no double sport allowance');

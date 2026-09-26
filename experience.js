@@ -140,7 +140,7 @@ function draftFromProfile() {
   const e=data.energy||{};
   return {sport:data.profile.sport||'',sex:e.sex||'',age:e.age||'',height:e.height||'',weight:e.weight||'',
     sportSessions:Number(e.sportSessions)||0,strengthSessions:Number(e.strengthSessions)||0,matchSessions:Number(e.matchSessions)||0,
-    dayType:e.dayType||'',energyGoal:e.energyGoal||'',equipment:[...(data.profile.equipment||[])],useAsGoal:e.useAsGoal??true};
+    season:e.season||'sessions',dayType:e.dayType||'',energyGoal:e.energyGoal||'',equipment:[...(data.profile.equipment||[])],useAsGoal:e.useAsGoal??true};
 }
 function readDraft() {
   let saved;
@@ -204,7 +204,7 @@ function onboardingBody() {
     ['sportSessions','Sportstræning','Pas pr. uge',14],['strengthSessions','Styrketræning','Pas pr. uge',14],['matchSessions','Kampe','Kampe pr. uge',7]
   ].map(([key,label,detail,max])=>'<div class="schedule-stepper"><div><strong>'+label+'</strong><small>'+detail+'</small></div><div class="stepper-control"><button type="button" data-stepper="'+key+'" data-delta="-1" aria-label="Færre '+label.toLowerCase()+'" '+(Number(onboardingDraft[key])<=0?'disabled':'')+'>−</button><output aria-label="'+label+'" aria-live="polite">'+onboardingDraft[key]+'</output><button type="button" data-stepper="'+key+'" data-delta="1" aria-label="Flere '+label.toLowerCase()+'" '+(Number(onboardingDraft[key])>=max?'disabled':'')+'>+</button></div></div>').join('');
   if(onboardingStep===5)return '<div class="onboarding-options" role="radiogroup" aria-label="Din hverdag">'+option('school','Skole eller studie','Det meste af dagen sidder jeg ned.','plan')+option('office','Kontorarbejde','Mest stillesiddende arbejde.','plan')+option('walking','På benene','Jeg står og går en stor del af dagen.','progress')+option('physical','Fysisk arbejde','Min hverdag er fysisk krævende.','train')+'</div>';
-  if(onboardingStep===6)return '<div class="onboarding-options" role="radiogroup" aria-label="Dit mål">'+option('maintain','Hold vægten. Byg din form.','Energi til træning og en stabil vægt.','pulse')+option('gain','Tag gradvist på.','Et højere energimål som udgangspunkt.','progress')+'</div>';
+  if(onboardingStep===6)return seasonSelector(onboardingDraft.season)+'<div class="onboarding-options" role="radiogroup" aria-label="Dit mål">'+option('maintain','Hold vægten. Byg din form.','Energi til træning og en stabil vægt.','pulse')+option('gain','Tag gradvist på.','+400 kcal/dag i både in-season og off-season.','progress')+'</div>';
   if(onboardingStep===7)return '<div class="onboarding-equipment" role="group" aria-label="Træningsudstyr">'+['Vægtstang','Håndvægte','Trap bar','Kabler','Medicinbold','Pull-up bar'].map(eq=>{
     const selected=onboardingDraft.equipment.includes(eq);
     return '<button type="button" class="onboarding-option '+(selected?'selected':'')+'" aria-pressed="'+selected+'" data-equipment="'+eq+'"><span>'+eq+'</span><span class="option-check">'+uiIcon('check')+'</span></button>';
@@ -241,6 +241,7 @@ function renderOnboarding(focusHeading=true) {
 }
 document.getElementById('onboarding').addEventListener('input',e=>{
   if(['age','height','weight'].includes(e.target.name)){onboardingDraft[e.target.name]=e.target.value;persistDraft()}
+  if(e.target.name==='season'){onboardingDraft.season=e.target.value;persistDraft()}
   if(e.target.name==='useAsGoal'){onboardingDraft.useAsGoal=e.target.checked;persistDraft()}
 });
 document.getElementById('onboarding').addEventListener('click',e=>{
@@ -281,7 +282,7 @@ document.getElementById('onboarding').addEventListener('submit',e=>{
   data.profile={...data.profile,sport:onboardingDraft.sport,equipment:[...onboardingDraft.equipment]};
   data.energy={...data.energy,sex:onboardingDraft.sex,age:Number(onboardingDraft.age),height:Number(onboardingDraft.height),weight:Number(onboardingDraft.weight),
     sportSessions:Number(onboardingDraft.sportSessions),strengthSessions:Number(onboardingDraft.strengthSessions),matchSessions:Number(onboardingDraft.matchSessions),
-    dayType:onboardingDraft.dayType,energyGoal:onboardingDraft.energyGoal,useAsGoal:!!onboardingDraft.useAsGoal};
+    season:onboardingDraft.season||'sessions',dayType:onboardingDraft.dayType,energyGoal:onboardingDraft.energyGoal,useAsGoal:!!onboardingDraft.useAsGoal};
   data.onboarding={completed:true,version:1,completedAt:new Date().toISOString()};
   try {
     save();

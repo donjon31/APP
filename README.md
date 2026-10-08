@@ -76,6 +76,12 @@ Open http://127.0.0.1:4173/. The app is static and requires no build or package 
 
 ## Kompakt overblik og personlige programmer
 
+### Enkel navigation
+
+Træning viser logning; Faste øvelser gemmer genveje til øvelser på den lokale profil; Programmer indeholder programredigering og oprettelse. En fast øvelse kan fjernes uden at fjerne historik eller øvelsen fra programbiblioteket. Forsidens syvdagesliste har Tilføj aktivitet samt et plus ved hver dato. Dialogen gemmer styrke, kamp eller sportstræning med start/sluttid uden at forlade forsiden. Kampdagskortet har konkrete måltidseksempler, ikke automatisk madlogning eller en komplet individuelt beregnet kostplan.
+
+`clarity.js`, `clarity.css` og `tests/clarity-browser.cjs` dækker den nye navigation. Ældre browsertests, som bruger den tidligere placering af programeditoren, skal navigere til Programmer først.
+
 ### Kampdag
 
 Kalenderaktiviteter med typen Kamp giver et kampdagskort i Overblik og Mad med generelle forslag før, under og efter kamp. Forslag logger ikke mad automatisk. Fremtidige kampdage viser planlagt dagsmål, men der opfindes ikke historiske mål.

@@ -1,4 +1,5 @@
 /* Shared immutable definitions; private overrides live in the local profile export. */
+function gamesInNextSeven(date){return data.events.filter(e=>e.type==='Kamp'&&e.date>=date&&e.date<=shiftDate(date,6)).length;}
 function ensureLibraryProfile() {
   let changed=false;
   if(!data.userId){data.userId=crypto.randomUUID();changed=true;}

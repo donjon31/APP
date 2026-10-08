@@ -76,6 +76,14 @@ Open http://127.0.0.1:4173/. The app is static and requires no build or package 
 
 ## Kompakt overblik og personlige programmer
 
+### Kalenderstyrede madtider og programvalg
+
+`scheduling.js` erstatter det faste kl. 18-eksempel med forslag 3 timer og 90 minutter før hver kamps start samt 30 minutter efter den registrerede sluttid. Manglende tid vises relativt, ikke med et opdigtet klokkeslæt. Datoovergange vises, og forslag som overlapper en anden kamp markeres til individuel tilpasning.
+
+Forsidens aktivitetsdialog viser en programvælger ved Styrke, gemmer program-ID og navn og filtrerer efter kampantal i syv datoer fra den valgte træningsdato (inklusive dagen). Automatisk programvalg i Træning og kalenderens styrkevælger bruger samme rullende interval; det er ikke længere kun mandag–søndag. Ingen programmer valgt betyder, at brugeren først skal tilvælge/oprette et program. Eksisterende kalenderaftaler ændres ikke automatisk, når senere kampe tilføjes.
+
+Test: `tests/scheduling-browser.cjs`. Premiumretning og nødvendige forudsætninger står i `PREMIUM-PLAN.md`; betaling og ekstern AI er ikke implementeret.
+
 ### Enkel navigation
 
 Træning viser logning; Faste øvelser gemmer genveje til øvelser på den lokale profil; Programmer indeholder programredigering og oprettelse. En fast øvelse kan fjernes uden at fjerne historik eller øvelsen fra programbiblioteket. Forsidens syvdagesliste har Tilføj aktivitet samt et plus ved hver dato. Dialogen gemmer styrke, kamp eller sportstræning med start/sluttid uden at forlade forsiden. Kampdagskortet har konkrete måltidseksempler, ikke automatisk madlogning eller en komplet individuelt beregnet kostplan.

@@ -12,7 +12,7 @@ const context = vm.createContext({
   data:{presets:[],meals:[],events:[]}, save(){writes++;},
   esc(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));},
   handle(name,fn){handlers[name]=fn;}, crypto:{randomUUID(){return 'test-'+(++uuid);}},
-  today(){return '2026-09-26';}, selectedDate:'2026-09-26',updateStrengthPicker(){}
+  today(){return '2026-09-26';},foodLogDate(){return '2026-09-26';}, selectedDate:'2026-09-26',updateStrengthPicker(){}
 });
 vm.runInContext(fs.readFileSync(path.join(root,'organization.js'),'utf8'),context);
 assert.equal(vm.runInContext('PRESET_CATEGORIES.length',context),6);

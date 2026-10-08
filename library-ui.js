@@ -25,6 +25,7 @@ function renderExerciseLibrary() {
 function renderWorkoutEditor() {
   const target=document.getElementById('editableExercises');if(!target)return;
   const record=workoutRecords(currentMode())[workoutIndex];
+  if(!record){target.innerHTML='<p class="foot">Ingen pas valgt til denne uge. Vælg eller opret et program ovenfor.</p>';return;}
   target.innerHTML=`<h3>${esc(record.name)}</h3>`+record.entries.filter(entry=>workoutEntryRaw(entry)!==null).map(entry=>`<form class="edit-exercise-row" data-edit-entry="${esc(entry.id)}"><strong translate="no">${esc(workoutExercise(workoutEntryRaw(entry)).name)}</strong><label>Sæt<input name="sets" type="number" min="1" max="100" value="${parseInt(entry.sets,10)||3}" required></label><label>Reps / sekunder<input name="reps" maxlength="20" value="${esc(entry.reps)}" required></label><button type="submit" class="button secondary">Gem ændring</button><button type="button" class="text-button" data-delete-entry="${esc(entry.id)}">Slet fra pas</button></form>`).join('')+(record.entries.length?'':'<p class="foot">Passet er tomt. Tilføj din første øvelse nedenfor.</p>');
   renderExerciseLibrary();
 }

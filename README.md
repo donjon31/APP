@@ -32,6 +32,10 @@ Open http://127.0.0.1:4173/. The app is static and requires no build or package 
 
 ## Data and themes
 
+- Kalender/overblik: større dagskort med læsbare antal logs og planlagte aktiviteter; månedsvisningen tæller også mad og check-ins. Tryk på en dag for at se indholdet. Ugerækken ruller vandret på små skærme.
+- Madloggen har en tydelig dato, og “Log mad på denne dag” åbner den fra et historisk overblik. Manuelle måltider, favoritter, forslag, basisvarer og scanning gemmes på den valgte dato. Oprettelse af en basisvare/favorit logger stadig ikke mad automatisk.
+- Madvarescanner under Mad → Søg: kamera, lokalt foto eller manuel EAN/UPC-kode. Billeder afkodes lokalt med ZXing Browser 0.2.1; kun stregkoden sendes til Open Food Facts. Kamera kræver tilladelse og HTTPS (localhost understøttes). Vareopslag kræver internet. Kontrollér etiketten og vælg g/ml før logning; manglende kcal/protein skal udfyldes. Der er ingen AI-baseret genkendelse af madfotos. Ingen vare logges ved selve scanningen.
+- Tredjepart: https://github.com/zxing-js/browser (MIT) og den bundtede ZXing library (Apache-2.0); licenser følger i `vendor/`. Produktdata: https://world.openfoodfacts.org/ (ODbL); resultater linker til produktets kilde. Ingen produktdatabase er bundtet med appen.
 - Øvelsesbibliotek: fælles standardøvelser fra kildekoden plus egne øvelser mærket med den lokale profils `userId`. Standardpas kan redigeres med sæt/reps, tilføjelse og fjernelse; egne pas kan oprettes. Tilpasninger gemmes separat fra standarddefinitionerne og ændrer ikke gamle træningslogs. Øvelseskladder følger stabile øvelses-ID'er, også når en anden øvelse fjernes fra passet.
 - Dette er stadig en lokal app uden login, serverdatabase eller synkronisering. `userId` organiserer data, men er ikke serverbaseret adgangskontrol. Rigtige brugerkonti kræver backend, autentificering og ejerkontrol på serveren. Eksport/import inkluderer egne biblioteker og tilpassede pas.
 - Egne basisvarer oprettes under Mad → Søg → Opret basisvare med kcal/protein pr. 100 g eller ml. Oprettelse logger ikke mad. Varen søges og logges med en valgt mængde, herunder liter/kg. CSV-import bevarer manuelt oprettede basisvarer. Sletning fra biblioteket påvirker ikke gamle måltidslogs.
@@ -69,5 +73,25 @@ Open http://127.0.0.1:4173/. The app is static and requires no build or package 
 - `experience.js`: onboarding, dashboard, theme preference, and demo chat.
 - `theme.css`: neutral light/dark design and responsive layouts.
 - `sw.js`: offline shell cache.
+
+## Kompakt overblik og personlige programmer
+
+### Kampdag
+
+Kalenderaktiviteter med typen Kamp giver et kampdagskort i Overblik og Mad med generelle forslag før, under og efter kamp. Forslag logger ikke mad automatisk. Fremtidige kampdage viser planlagt dagsmål, men der opfindes ikke historiske mål.
+
+Kamptillægget er som standard 600 kcal pr. kamp og kan ændres i Profil (0–2000 kcal). Det er en planlægningsantagelse, ikke et målt energiforbrug. Manuelle mål behandles som almindelige dagsmål uden kampenergi; vælg 0, hvis målet allerede indeholder kampenergi. Uden et grundmål vises ingen automatisk kalorieanbefaling.
+
+Ved beregnede sæsonmål trækkes det fordelte kampbidrag fra gennemsnittet på dagene i kalenderuger med kampe, og det valgte tillæg lægges på selve kampdagene. I pasmodellen erstattes kampens tidligere aktivitetsestimat; det lægges ikke oveni. Bulk- og halbidrag bevares. Flere kalenderkampe samme dag giver flere tillæg. Sletning/flytning af kampe opdaterer dagsmål.
+
+Madvejledning: Sports Dietitians Australia, [før sport](https://www.sportsdietitians.com.au/wp-content/uploads/2015/04/Eating-Drinking-Before-Sport-Aug-10.pdf) og [under/efter sport](https://www.sportsdietitians.com.au/wp-content/uploads/2015/04/Eating-and-drinking-during-and-after-sport-Aug-10.pdf). Individuelle behov, allergier og tolerancer skal respekteres; især unge bør få individuel rådgivning.
+
+`matchday.js`, `matchday.css` og `tests/matchday-browser.cjs` indeholder funktion og regressionstest.
+
+- Overblikket viser syv datoer fra i dag, med frem/tilbage til andre uger og en dagsopdelt liste over kommende aktiviteter.
+- Under Træn → Programmer kan du oprette hele programmer og vælge dem separat til uger med 0, 1 eller 2+ kampe. Automatikken følger kalenderugen for den valgte træningsdato.
+- Fjern skjuler programmet uden at slette træningshistorikken. Det kan gendannes under Fjernede programmer. Øvelser kan fjernes direkte fra træningslisten.
+- Eksisterende valg og lokale registreringer bevares. Der er stadig ingen serverlogin eller synkronisering mellem enheder.
+- `smooth.js` og `smooth.css` indeholder det kompakte overblik, måltidsgenveje og programstyring. `tests/smooth-browser.cjs` tester disse flows i Chrome.
 
 The supplied reference is a still image. No video frames were extracted; 20 fps extraction needs a video file.

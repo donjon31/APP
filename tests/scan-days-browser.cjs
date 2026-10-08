@@ -1,0 +1,31 @@
+const {chromium}=require('playwright'),assert=require('node:assert/strict');
+(async()=>{
+ const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({locale:'da-DK',viewport:{width:390,height:844}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('http://127.0.0.1:4173/app.html');await page.evaluate(()=>{closeOnboarding(true);});
+ await page.locator('[data-history-shift="-1"]').click();const yesterday=await page.locator('#overviewDate').inputValue();
+ await page.locator('#logFoodForDay').click();assert.equal(await page.locator('#foodLogDate').inputValue(),yesterday);
+ await page.locator('#mealForm [name=name]').fill('Efterregistreret mad');await page.locator('#mealForm [name=kcal]').fill('500');await page.locator('#mealForm [name=protein]').fill('25');await page.locator('#mealForm [name=savePreset]').check();await page.locator('#mealForm button').click();
+ assert.equal(await page.evaluate(()=>data.meals.at(-1).date),yesterday);
+ await page.locator('[data-food-view=saved]').click();await page.locator('[data-action=preset]').first().click();assert.equal(await page.evaluate(()=>data.meals.at(-1).date),yesterday);
+ await page.locator('[data-food-view=ideas]').click();await page.locator('[data-action=idea]').first().click();assert.equal(await page.evaluate(()=>data.meals.at(-1).date),yesterday);
+ await page.locator('.tab[data-tab=home]').click();assert.equal(await page.locator('#pageTitle').textContent(),'I går');assert.match(await page.locator('.smooth-day.selected').getAttribute('aria-label'),/3 logs/);assert.ok((await page.locator('.smooth-day.selected').boundingBox()).height>=72);
+ await page.screenshot({path:'/tmp/harpex-day-cards.png',fullPage:false});
+ await page.locator('.tab[data-tab=plan]').click();assert.match(await page.locator(`.month-day[data-value="${yesterday}"]`).textContent(),/3 logs/);
+ await page.evaluate(()=>showTab('fuel'));await page.locator('[data-food-view=search]').click();await page.locator('#foodScanner>summary').click();
+ let lookups=0;await page.route('https://world.openfoodfacts.org/api/v2/product/**',async route=>{lookups++;await route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({status:1,product:{product_name:'Test kakao',nutriments:{'energy-kcal_100g':60,proteins_100g:3.5}}})});});
+ await page.locator('#barcodeInput').fill('12345678');await page.locator('#barcodeForm button').click();assert.equal(lookups,0);
+ await page.locator('#barcodeInput').fill('4006381333931');await page.locator('#barcodeForm button').click();await page.locator('#scannedProduct').waitFor({state:'visible'});
+ assert.equal(await page.locator('#scannedProduct [name=unit]').inputValue(),'');assert.equal(await page.evaluate(()=>data.meals.length),3);
+ await page.locator('#scannedProduct [name=unit]').selectOption('ml');await page.locator('#scannedProduct [name=amount]').fill('250');await page.locator('#scannedProduct [name=keep]').check();await page.locator('#scannedProduct button').click();
+ assert.equal(await page.evaluate(()=>data.meals.at(-1).kcal),150);assert.equal(await page.evaluate(()=>data.meals.at(-1).protein),8.8);assert.equal(await page.evaluate(()=>data.meals.at(-1).date),yesterday);assert.ok(await page.evaluate(()=>data.customFoods.some(f=>f.barcode==='4006381333931')));
+ // A real EAN-13 bitmap exercises the vendored decoder, not a mocked decode result.
+ const png=await page.evaluate(()=>{const code='4006381333931',L=['0001101','0011001','0010011','0111101','0100011','0110001','0101111','0111011','0110111','0001011'],G=['0100111','0110011','0011011','0100001','0011101','0111001','0000101','0010001','0001001','0010111'],parity=['LLLLLL','LLGLGG','LLGGLG','LLGGGL','LGLLGG','LGGLLG','LGGGLL','LGLGLG','LGLGGL','LGGLGL'][Number(code[0])];const bits='101'+[...code.slice(1,7)].map((n,i)=>(parity[i]==='L'?L:G)[Number(n)]).join('')+'01010'+[...code.slice(7)].map(n=>L[Number(n)].replace(/[01]/g,x=>x==='0'?'1':'0')).join('')+'101';const canvas=document.createElement('canvas');canvas.width=420;canvas.height=180;const c=canvas.getContext('2d');c.fillStyle='white';c.fillRect(0,0,420,180);c.fillStyle='black';[...bits].forEach((bit,i)=>{if(bit==='1')c.fillRect(60+i*3,20,3,140)});return canvas.toDataURL('image/png').split(',')[1];});
+ await page.locator('#barcodePhoto').setInputFiles({name:'barcode.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});await page.locator('#scannedProduct').waitFor({state:'visible'});assert.equal(await page.locator('#barcodeInput').inputValue(),'4006381333931');
+ await page.unroute('https://world.openfoodfacts.org/api/v2/product/**');await page.route('https://world.openfoodfacts.org/api/v2/product/**',route=>route.fulfill({status:200,contentType:'application/json',body:'{"status":0}'}));
+ await page.locator('#barcodeForm button').click();await page.waitForFunction(()=>document.getElementById('scannerStatus').textContent.includes('ikke fundet'));assert.equal(await page.locator('#scannedProduct').isVisible(),false);
+ await page.unroute('https://world.openfoodfacts.org/api/v2/product/**');await page.route('https://world.openfoodfacts.org/api/v2/product/**',route=>route.abort());await page.locator('#barcodeForm button').click();await page.waitForFunction(()=>document.getElementById('scannerStatus').textContent.includes('ikke gennemføres'));
+ await page.evaluate(()=>{navigator.mediaDevices.getUserMedia=async()=>{throw new DOMException('Denied','NotAllowedError')};});await page.locator('#startScanner').click();await page.waitForFunction(()=>document.getElementById('scannerStatus').textContent.includes('ikke åbne kameraet'));assert.equal(await page.locator('#barcodeVideo').isVisible(),false);
+ await page.screenshot({path:'/tmp/harpex-scanner.png',fullPage:false});
+ await page.reload();assert.equal(await page.evaluate(()=>data.meals.filter(m=>m.name.startsWith('Test kakao'))[0].date),yesterday);
+ assert.deepEqual(errors,[]);await browser.close();console.log('PASS: larger dates, manual/preset/idea backdating, scanner lookup and portions, real EAN photo decoding, unknown product, network failure, camera denial, persistence');
+})().catch(e=>{console.error(e);process.exit(1)});

@@ -1,0 +1,24 @@
+const {chromium}=require('playwright'),assert=require('node:assert/strict');
+(async()=>{
+ const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({locale:'da-DK',viewport:{width:390,height:844}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('http://127.0.0.1:4173/app.html');await page.evaluate(()=>{closeOnboarding(true);data.profile.kcalGoal=2400;data.events=[];save();});
+ assert.equal(await page.evaluate(()=>currentKcalGoal()),2400);assert.equal(await page.locator('#matchDayOverview').isVisible(),false);
+ await page.evaluate(()=>{data.events.push({id:'game',date:today(),type:'Kamp',title:'Håndbold',time:'18:00',endTime:'19:30'});save();});
+ assert.equal(await page.evaluate(()=>currentKcalGoal()),3000);assert.match(await page.locator('#dashboardStats').textContent(),/3.000/);assert.equal(await page.locator('#matchDayOverview').isVisible(),true);
+ await page.locator('#matchDayOverview summary').click();assert.equal(await page.locator('#matchDayOverview .matchday-row').count(),4);assert.equal(await page.evaluate(()=>data.meals.length),0);
+ await page.evaluate(()=>showTab('profile'));await page.locator('#matchDaySettings input').fill('500');await page.locator('#matchDaySettings button').click();assert.equal(await page.evaluate(()=>currentKcalGoal()),2900);
+ await page.reload();assert.equal(await page.evaluate(()=>currentKcalGoal()),2900);
+ await page.evaluate(()=>{data.profile.matchDayKcal=600;data.energy={age:25,weight:80,height:180,sex:'male',dayType:'office',strengthSessions:3,sportSessions:4,matchSessions:1,season:'in',energyGoal:'gain',useAsGoal:true};save();});
+ const values=await page.evaluate(()=>{const e=estimateWithoutMatchDay();return {expected:Math.round(e.average-e.components.matches+600),actual:currentKcalGoal(),today:estimateEnergy().today,surplus:e.components.surplus};});assert.equal(values.actual,values.expected);assert.equal(values.today,values.expected);assert.equal(values.surplus,400);
+ const rest=await page.evaluate(()=>{const date=shiftDate(weekStart(today()),today()===weekStart(today())?1:0),e=estimateWithoutMatchDay();return {actual:matchDayGoal(date),expected:Math.round(e.average-e.components.matches)};});assert.equal(rest.actual,rest.expected);
+ await page.evaluate(()=>{data.energy.season='off';save();});assert.equal(await page.evaluate(()=>currentKcalGoal()-estimateWithoutMatchDay().average),600);
+ await page.evaluate(()=>{data.energy.season='sessions';save();});assert.equal(await page.evaluate(()=>currentKcalGoal()),await page.evaluate(()=>Math.round(estimateWithoutMatchDay().activeBase+600+400)));
+ await page.evaluate(()=>{data.energy=null;data.profile.kcalGoal=2400;data.events[0].date=shiftDate(today(),2);save();selectOverviewDate(shiftDate(today(),2));});
+ assert.equal(await page.evaluate(()=>currentKcalGoal()),2400);assert.match(await page.locator('#matchDayOverview').textContent(),/3.000/);assert.match(await page.locator('#dashboardStats').textContent(),/3.000/);
+ await page.evaluate(()=>{data.events.push({...data.events[0],id:'second'});save();});assert.equal(await page.evaluate(()=>matchDayGoal(shiftDate(today(),2))),3600);
+ await page.evaluate(()=>{data.profile.kcalGoal=null;save();});assert.match(await page.locator('#matchDayOverview').textContent(),/Sæt et kaloriemål/);
+ await page.evaluate(()=>{data.profile.kcalGoal=2400;data.events=[{id:'game',date:today(),type:'Kamp',title:'Håndbold',time:'18:00',endTime:'19:30'}];selectOverviewDate(today());showTab('home');save();applyTheme('light');});await page.locator('#matchDayOverview summary').click();await page.locator('#matchDayOverview').screenshot({path:'/tmp/harpex-matchday.png'});
+ await page.evaluate(()=>{showTab('fuel');selectFoodView('log');});assert.equal(await page.locator('#matchDayFood').isVisible(),true);
+ await page.evaluate(()=>{data.events=[];save();});assert.equal(await page.evaluate(()=>currentKcalGoal()),2400);assert.equal(await page.locator('#matchDayFood').isVisible(),false);
+ assert.deepEqual(errors,[]);await browser.close();console.log('PASS: manual goals, all season models, no double counting, future dates, multiple matches, no goal, editable allowance, persistence, meal guidance, deleting match');
+})().catch(e=>{console.error(e);process.exit(1)});

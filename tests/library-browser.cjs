@@ -15,7 +15,7 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
  assert.equal(await page.evaluate(()=>data.meals.length),0);
  const edit=page.locator('[data-edit-entry]').last();await edit.locator('[name=sets]').fill('4');await edit.locator('[name=reps]').fill('12');await edit.locator('[type=submit]').click();
  assert.equal(await page.locator('.exerciseForm').last().locator('[name=sets]').inputValue(),'4');
- await page.locator('#createWorkout').locator('xpath=..').locator('summary').click();await page.locator('#createWorkout [name=name]').fill('Mit eget pas');await page.locator('#createWorkout button').click();
+ await page.locator('nav [data-program-view=manage]').click();await page.locator('#newProgramForm [name=name]').fill('Mit eget pas');await page.locator('#newProgramForm button').click();
  assert.equal(await page.locator('.exerciseForm').count(),0);
  await page.locator('#exerciseLibraryChoice').selectOption(customId);await page.locator('#addLibraryExercise button').click();assert.equal(await page.locator('.exerciseForm').count(),1);
  await page.locator('.exerciseForm [name=kg]').fill('12');await page.locator('.exerciseForm button').click();
@@ -44,7 +44,7 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
  assert.equal(await page.locator('.tab[data-tab=progress]').textContent(),'Progress');
  await page.evaluate(()=>showTab('train'));await page.locator('#workoutEditor').evaluate(el=>el.open=true);
  assert.equal(await page.locator('#workoutEditor>summary').textContent(),'Edit workout and exercises');
- assert.equal(await page.locator('#gameCount option[value="0"]').textContent(),'0 matches · 4 workouts');
+ assert.equal(await page.locator('#gameCount option[value="0"]').textContent(),'0 matches · 5 workouts');
  assert.equal(await page.locator('#gameCount').inputValue(),'auto');
  await page.locator('#gameCount').selectOption('0');assert.equal(await page.locator('#gameCount').inputValue(),'0');
  await page.screenshot({path:'/tmp/harpex-library-en.png',fullPage:true});

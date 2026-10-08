@@ -19,13 +19,19 @@ function globalExercises() {
 function availableExercises() {
   return [...globalExercises(),...ensureLibraryProfile().exercises.filter(e=>e.userId===data.userId)];
 }
-function workoutRecords(mode) {
+function defaultWorkoutRecords(mode) {
   const lib=ensureLibraryProfile();
   return [...STRENGTH_PLANS[mode].map(([name,raws],planIndex)=>{
     const key=mode+':'+name;
     return {id:key,name,shared:true,entries:lib.overrides[key]||raws.map((raw,i)=>{const [exercise,sets,reps]=raw.split('|');return {id:'seed:'+mode+':'+planIndex+':'+i,exerciseId:'global:'+exercise,sets,reps,original:raw};})};
   }),...lib.workouts.filter(w=>w.userId===data.userId)];
 }
+function allWorkoutRecords(){return [...new Map([0,1,2].flatMap(defaultWorkoutRecords).map(w=>[w.id,w])).values()];}
+function workoutRecords(mode){const lib=ensureLibraryProfile(),all=allWorkoutRecords(),ids=lib.weekPrograms?.[mode];return (Array.isArray(ids)?ids.map(id=>all.find(w=>w.id===id)).filter(Boolean):defaultWorkoutRecords(mode)).filter(w=>!(lib.archivedPrograms||[]).includes(w.id));}
+function programAssigned(id,mode){return workoutRecords(mode).some(w=>w.id===id);}
+function assignProgram(id,mode,enabled){const lib=ensureLibraryProfile();lib.weekPrograms ||= {};const ids=workoutRecords(mode).map(w=>w.id);lib.weekPrograms[mode]=enabled?[...new Set([...ids,id])]:ids.filter(x=>x!==id);}
+function archiveProgram(id){const lib=ensureLibraryProfile();lib.archivedPrograms=[...new Set([...(lib.archivedPrograms||[]),id])];}
+function restoreProgram(id){const lib=ensureLibraryProfile();lib.archivedPrograms=(lib.archivedPrograms||[]).filter(x=>x!==id);}
 function workoutEntryRaw(entry) {
   const exercise=availableExercises().find(e=>e.id===entry.exerciseId);
   if(!exercise)return null;

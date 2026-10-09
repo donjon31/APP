@@ -76,6 +76,23 @@ Open http://127.0.0.1:4173/. The app is static and requires no build or package 
 
 ## Kompakt overblik og personlige programmer
 
+### Faste måltider → ingredienser og indkøb
+
+Faste måltider har en genvej til deres ingrediensliste og en kategoriseret oversigt i Indkøbsliste. Gem ingredienser til næste gang gemmer kun opskriften; Tilføj til indkøbslisten opretter varer. Ingen af handlingerne registrerer spist mad. Varer grupperes efter måltidskategori; ældre varer uden kategori vises under Uden kategori.
+
+Kcal og protein er måltidets gemte tal pr. oprindelig portion. Ingrediensfritekst er ikke en næringsberegner, og ændringer i mængder genberegner ikke tallene. Dette er tydeligt angivet i visningen. Opskrifter og indkøb er lokale og følger med dataeksporten. Test: `tests/meal-shopping-browser.cjs`.
+
+### Dagsplan, ugeoverblik og hverdagsgenveje
+
+- Forsiden samler dagens aktiviteter, kamprelaterede måltidstidspunkter og aktuelt energimål. Historiske mål opfindes ikke. Et planlagt styrkepas kan åbnes, hvis det er tilvalgt til den aktuelle kampbelastning.
+- Ugeoverblik dækker syv datoer til og med den valgte dato (højst i dag): antal dato/program-kombinationer med styrkelogs, madlogningsdage, gennemsnit for registrerede dage og forskel mellem første/sidste vægtmåling. Planlagt aktivitet betyder ikke gennemført, og én madlog betyder ikke komplet registrering.
+- Mad → Log → Kopiér måltider: vælg kilde-/måldato og enkelte måltider; seneste kopiering kan fortrydes i den aktuelle session. Originaler og øvrige logs bevares.
+- Træning → Brug sidste: foreslår seneste log før træningsdatoen for samme øvelse og program. Hentes kun ved klik, kan redigeres og gemmes først ved Gem øvelse.
+- Kalender → Gentag en aktivitet ugentligt: forhåndsvis 1–8 ekstra uger. Identiske dato/tid/type/navn springes over. Kopier er selvstændige aftaler, ikke en baggrundsautomatik. Samme program beholdes, så brugeren skal tjekke senere kampbelastning.
+- Mad → Indkøbsliste: vælg madidé eller fast måltid, ret ingredienser og mængder, tilføj og markér købte varer. Flere madidéer har redigerbare standardingredienser. Egne ingredienslister huskes på den lokale profil. Ingredienser sammenlægges ikke på tværs af retter, da enheder og mængder kan være forskellige.
+
+`everyday.js`, `everyday.css`, `tests/everyday-browser.cjs`. Ingen login, cloudbackup, ekstern AI eller betaling er tilføjet. Alle nye brugerdata indgår i den eksisterende lokale eksport/import.
+
 ### Kalenderstyrede madtider og programvalg
 
 `scheduling.js` erstatter det faste kl. 18-eksempel med forslag 3 timer og 90 minutter før hver kamps start samt 30 minutter efter den registrerede sluttid. Manglende tid vises relativt, ikke med et opdigtet klokkeslæt. Datoovergange vises, og forslag som overlapper en anden kamp markeres til individuel tilpasning.
